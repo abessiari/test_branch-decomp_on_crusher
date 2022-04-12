@@ -3,6 +3,7 @@
 Run BranchDecomposition tests using Kokkos device and test output against SweepAndMergeSerial outputs.
 
 ## Requirements
+  - git-lfs
   - Build Kokos
   - Build VTKM (Weber for now)
   - see sample build_scripts
