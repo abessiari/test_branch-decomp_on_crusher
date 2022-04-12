@@ -2,12 +2,12 @@
 #SBATCH -A csc340
 #SBATCH -J hip-test
 #SBATCH -o %x-%j.out
-#SBATCH -t 01:00:00
+#SBATCH -t 00:30:00
 #SBATCH -N 64 
 
 export LC_ALL=C
-export DATA_DIR=./VTKM_DATA
-export GTCT_DIR=./SweepAndMergeSerialOutput
+export DATA_DIR=$PWD/VTKM_DATA
+export GTCT_DIR=$PWD/SweepAndMergeSerialOutput
 export PATH=$HOME/weber-mpi/vtkm/build/examples/contour_tree_distributed:$PATH
 
 if [ ! -d  $DATA_DIR ]; then

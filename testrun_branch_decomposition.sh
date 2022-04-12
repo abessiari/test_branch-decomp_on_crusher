@@ -2,9 +2,6 @@
 
 echo "Starting Timing Runs"
 echo
-echo "8x9 Test Set"
-time ./hact_test_branch_decomposition.sh $DATA_DIR/8x9test.txt 4 
-echo
 echo "Vancouver Test Set"
 time ./hact_test_branch_decomposition.sh $DATA_DIR/vanc.txt $1 
 echo
@@ -35,6 +32,6 @@ echo
 echo "Icefields Test Set"
 time ./hact_test_branch_decomposition.sh $DATA_DIR/icefield.txt $1
 echo
-echo "GTOPO30 UK Tile Test Set"
-time ./hact_test_branch_decomposition.sh $DATA_DIR/gtopo30w020n40.txt $1
-echo "Done"
+#echo "GTOPO30 UK Tile Test Set"
+#time ./hact_test_branch_decomposition.sh $DATA_DIR/gtopo30w020n40.txt $1
+#echo "Done"
