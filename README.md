@@ -1,6 +1,6 @@
-# Test Branch Decoposioosition On Crusher
+# Test Branch Decomposition On Crusher
 
-Run BranchDecomposition tests using Kokkos device and test output against SweepAndMergeSerial outputs.
+Run BranchDecomposition tests using Kokkos device and test against SweepAndMergeSerial outputs.
 
 ## Requirements
   - git-lfs
