@@ -1,5 +1,9 @@
 # Directory on Crusher
 -/ccs/home/aessiari/proj-shared/crusher
+# Warpx Source Code
+- Modify GNUmakefile
+- USE_OMP   = FALSE   # ?????
+- USE_ASCENT_INSITU = TRUE 
 # Warpx Build Directory
 - /ccs/home/aessiari/proj-shared/crusher/WarpX/build_mpi
 # Run "ccmake ." in Warpx Build Directory
