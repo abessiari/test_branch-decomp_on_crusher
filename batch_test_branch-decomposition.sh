@@ -1,14 +1,16 @@
 #!/bin/bash
-#SBATCH -A csc340
-#SBATCH -J hip-test
+#SBATCH -A CSC340_crusher
+#SBATCH -J branch-test
 #SBATCH -o %x-%j.out
 #SBATCH -t 00:30:00
-#SBATCH -N 64 
+#SBATCH -N 16 
 
 export LC_ALL=C
-export DATA_DIR=$PWD/VTKM_DATA
-export GTCT_DIR=$PWD/SweepAndMergeSerialOutput
-export PATH=$HOME/weber-mpi/vtkm/build/examples/contour_tree_distributed:$PATH
+export GTCT_DIR=$HOME/parallel-peak-pruning/ContourTree/SweepAndMergeSerial/out
+export DATA_DIR=$HOME/VTKM_DATA
+
+# export PATH=/ccs/home/aessiari/MIN/KOKKOS/build/vtk-m-min/examples/contour_tree_distributed:$PATH
+export PATH=/ccs/home/aessiari/MIN/MPI/build/vtk-m-min/examples/contour_tree_distributed:$PATH
 
 if [ ! -d  $DATA_DIR ]; then
     echo "Error: Directory  $DATA_DIR does not exist!"
@@ -20,8 +22,11 @@ if [ ! -d  $GTCT_DIR ]; then
     exit 1;
 fi;
 
-# export DEVICE=Serial
-export DEVICE=Kokkos
+source ~/VTKM_AND_KOKKOS/module.sh 
+
+# export DEVICE=Kokkos
+export DEVICE=Serial
+
 export NP=$SLURM_NNODES
 parts=$(echo "$NP" | awk '{print sqrt($1)}')
 time ./testrun_branch_decomposition.sh $parts

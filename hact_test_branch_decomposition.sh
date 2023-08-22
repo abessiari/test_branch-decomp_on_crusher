@@ -28,19 +28,19 @@ split_data_2d.py ${filename} $2
 echo "Running HACT"
 n_parts=$(($2*$2))
 
-echo srun -n$np -c1 --gpus-per-task=1 --gpu-bind=closest ContourTree_Distributed --vtkm-device $DEVICE --preSplitFiles --saveOutputData --augmentHierarchicalTree --computeVolumeBranchDecomposition --numBlocks=${n_parts} ${fileroot}_part_%d_of_${n_parts}.txt
+#echo srun -n$np -c1 --gpus-per-task=1 --gpu-bind=closest ContourTree_Distributed --vtkm-device $DEVICE --preSplitFiles --saveOutputData --augmentHierarchicalTree --computeVolumeBranchDecomposition --numBlocks=${n_parts} ${fileroot}_part_%d_of_${n_parts}.txt
 
-srun -n$np -c1 --gpus-per-task=1 --gpu-bind=closest ContourTree_Distributed --vtkm-device $DEVICE --preSplitFiles --saveOutputData --augmentHierarchicalTree --computeVolumeBranchDecomposition --numBlocks=${n_parts} ${fileroot}_part_%d_of_${n_parts}.txt
+#srun -n$np -c1 --gpus-per-task=1 --gpu-bind=closest ContourTree_Distributed --vtkm-device $DEVICE --preSplitFiles --saveOutputData --augmentHierarchicalTree --computeVolumeBranchDecomposition --numBlocks=${n_parts} ${fileroot}_part_%d_of_${n_parts}.txt
 
-echo "Compiling Outputs"
+echo srun -n$np ContourTree_Distributed --vtkm-device $DEVICE --preSplitFiles --saveOutputData --augmentHierarchicalTree --computeVolumeBranchDecomposition --numBlocks=${n_parts} ${fileroot}_part_%d_of_${n_parts}.txt
+srun -n$np ContourTree_Distributed --vtkm-device $DEVICE --preSplitFiles --saveOutputData --augmentHierarchicalTree --computeVolumeBranchDecomposition --numBlocks=${n_parts} ${fileroot}_part_%d_of_${n_parts}.txt
+
 mkdir extras
-sort -u BranchDecomposition_Rank_*.txt > extras/outsort${fileroot}_$2x$2.txt
 mkdir results
-cat extras/outsort${fileroot}_$2x$2.txt | BranchCompiler | sort > results/bcompile${fileroot}_$2x$2.txt
 
-echo "Diffing"
-cat results/bcompile${fileroot}_$2x$2.txt | sort -u -n > results/this.txt
-cat ${GTCT_DIR}/branch_decomposition_volume_${fileroot}.txt | sort -u -n > results/other.txt
+echo "Final Outputs"
+sort -u BranchDecomposition_Rank_*.txt > results/this.txt
+sort ${GTCT_DIR}/branch_decomposition_volume_hybrid_${fileroot}.txt > results/other.txt
 diff results/this.txt results/other.txt > extras/diff.txt
 
 mkdir logs
@@ -52,4 +52,17 @@ if test -s extras/diff.txt; then
        	echo "STATUS:${fileroot}:${RED}FAIL${NC}" > extras/status_code.txt; 
 else 
 	echo "STATUS:${fileroot}:${GREEN}PASS${NC}" > extras/status_code.txt; 
+fi;
+
+echo "Intermediate Outputs"
+sort -u BranchDecompositionIntermediate_Rank_*.txt | BranchCompiler | sort -u > results/bcompile.txt
+
+diff results/bcompile.txt results/other.txt > extras/bcompile_diff.txt
+
+if test -s extras/bcompile_diff.txt; then echo "COMPILER_STATUS:${fileroot}:${RED}FAIL${NC}"; else echo "COMPILER_STATUS:${fileroot}:${GREEN}PASS${NC}"; fi;
+
+if test -s extras/bcompile_diff.txt; then
+       	echo "COMPILER_STATUS:${fileroot}:${RED}FAIL${NC}" >> extras/status_code.txt;
+else
+	echo "COMPILER_STATUS:${fileroot}:${GREEN}PASS${NC}" >> extras/status_code.txt;
 fi;
